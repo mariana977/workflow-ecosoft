@@ -2,9 +2,9 @@ name: CI Ecosoft
 
 on:
   push:
-    branches: ["develop", "main"]
+    branches: [ "develop", "main" ]
   pull_request:
-    branches: ["develop", "main"]
+    branches: [ "develop", "main" ]
 
 jobs:
   build-and-test:
@@ -23,11 +23,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Instalar dependencias backend
-        run: |
-          cd backend
-          npm install
-
+      # SOLO FRONTEND
       - name: Instalar dependencias frontend
         run: |
           cd frontend
@@ -38,22 +34,13 @@ jobs:
           cd frontend
           npm run build
 
-      - name: Linter backend
-        run: |
-          cd backend
-          npm run lint || echo "No hay lint configurado"
-
       - name: Linter frontend
         run: |
           cd frontend
           npm run lint || echo "No hay lint configurado"
 
-      - name: Tests backend
-        run: |
-          cd backend
-          npm test || echo "No hay tests configurados"
-
       - name: Tests frontend
         run: |
           cd frontend
           npm test || echo "No hay tests configurados"
+

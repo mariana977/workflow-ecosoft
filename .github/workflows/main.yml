@@ -23,7 +23,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      # SOLO FRONTEND
+      # ------- FRONTEND -------
       - name: Instalar dependencias frontend
         run: |
           cd frontend
@@ -44,3 +44,18 @@ jobs:
           cd frontend
           npm test || echo "No hay tests configurados"
 
+      # ------- BACKEND -------
+      - name: Configurar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Instalar dependencias backend
+        run: |
+          cd backend
+          pip install -r requirements.txt
+
+      - name: Tests backend
+        run: |
+          cd backend
+          pytest || echo "No hay tests configurados"

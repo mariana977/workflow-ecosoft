@@ -25,15 +25,15 @@ jobs:
       - name: Build
         run: |
           cd frontend
-          npm run build
+          npm run build   # usa npm run, no vite directo
 
       - name: Lint
         run: |
           cd frontend
-          npm run lint
+          npm run lint    # igual aquí
 
       - name: Run tests
         run: |
           cd frontend
-          npm run test
+          npm run test    # y aquí
 

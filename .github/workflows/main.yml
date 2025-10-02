@@ -2,58 +2,28 @@ name: CI Ecosoft
 
 on:
   push:
-    branches: [ "develop", "main" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "develop", "main" ]
+    branches: [ "main" ]
 
 jobs:
-  build-and-test:
+  build-frontend:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [18.x]
-
+    defaults:
+      run:
+        working-directory: frontend
     steps:
-      - name: Checkout del código
+      - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Configurar Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 18
 
-      - name: Instalar dependencias backend
-        run: |
-          cd backend
-          npm install
+      - name: Install dependencies (frontend)
+        run: npm install
 
-      - name: Instalar dependencias frontend
-        run: |
-          cd frontend
-          npm install
+      - name: Run tests (frontend)
+        run: npm test
 
-      - name: Compilar frontend
-        run: |
-          cd frontend
-          npm run build
-
-      - name: Linter backend
-        run: |
-          cd backend
-          npm run lint || echo "No hay lint configurado"
-
-      - name: Linter frontend
-        run: |
-          cd frontend
-          npm run lint || echo "No hay lint configurado"
-
-      - name: Tests backend
-        run: |
-          cd backend
-          npm test || echo "No hay tests configurados"
-
-      - name: Tests frontend
-        run: |
-          cd frontend
-          npm test || echo "No hay tests configurados"

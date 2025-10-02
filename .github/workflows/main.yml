@@ -17,10 +17,17 @@ jobs:
         with:
           node-version: 18
 
-      - name: Install dependencies
+      - name: Instalar dependencias frontend
+       run: |
+       cd frontend
+       npm install --include=dev
+
+      - name: Dar permisos a vite
         run: |
-          cd frontend
-          npm install
+        cd frontend
+       chmod +x ./node_modules/.bin/vite
+
+
 
       - name: Build
         run: |

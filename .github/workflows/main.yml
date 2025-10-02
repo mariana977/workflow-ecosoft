@@ -2,60 +2,55 @@ name: CI Ecosoft
 
 on:
   push:
-    branches: [ "develop", "main" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "develop", "main" ]
+    branches: [ "main" ]
 
 jobs:
-  build-and-test:
+  build-frontend:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [18.x]
-
+    defaults:
+      run:
+        working-directory: frontend
     steps:
-      - name: Checkout del código
+      - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Configurar Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 18
 
-      # ------- FRONTEND -------
-      - name: Instalar dependencias frontend
-        run: |
-          cd frontend
-          npm install
+      - name: Install dependencies (frontend)
+        run: npm install
 
-      - name: Compilar frontend
-        run: |
-          cd frontend
-          npm run build
+      - name: Build frontend
+        run: npm run build
 
-      - name: Linter frontend
-        run: |
-          cd frontend
-          npm run lint || echo "No hay lint configurado"
+      - name: Run tests (frontend)
+        run: npm test
 
-      - name: Tests frontend
-        run: |
-          cd frontend
-          npm test || echo "No hay tests configurados"
+  build-backend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
 
-      # ------- BACKEND -------
-      - name: Configurar Python
+      - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.10'
+          python-version: "3.10"
 
-      - name: Instalar dependencias backend
+      - name: Install dependencies (backend)
         run: |
-          cd backend
+          python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Tests backend
+      - name: Run tests (backend)
         run: |
-          cd backend
-          pytest || echo "No hay tests configurados"
+          if [ -f manage.py ]; then python manage.py test; fi
+          if [ -d tests ]; then pytest; fi
+
